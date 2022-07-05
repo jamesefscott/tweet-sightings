@@ -7,7 +7,7 @@ h1 {
 }
 
 #top-container input[type=text] {
-    width: 180px;
+    width: 140px;
 }
 
 #top-container input {
@@ -34,7 +34,7 @@ h1 {
 }
 
 #top-container {
-    width: calc(100% - 20px);
+    width: calc(100% - 30px);
     display: flex;
     align-items: center;
     justify-content: center;
