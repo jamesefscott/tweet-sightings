@@ -1,0 +1,149 @@
+body {
+    font-family: "Source Sans Pro", "Arial", sans-serif;
+}
+
+h1 {
+    font-size: 20px;
+}
+
+#top-container input[type=text] {
+    width: 180px;
+}
+
+#top-container input {
+    height: 20px;
+    background: #ddd;
+    border: none;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+#top-container button {
+    background: #fafafa;
+    border: solid 2px #ddd;
+    color: #666;
+    font-weight: 600;
+    width: 50px;
+    height: 30px;
+    border-radius: 25px;
+    cursor: pointer;
+}
+
+#top-container * {
+    margin: 10px;
+}
+
+#top-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 10%;
+    flex-wrap: wrap;
+}
+
+#main-viz {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.bird-item {
+    padding: 5px;
+    color: #fafafa;
+    margin: 5px;
+    border-radius: 7px;
+    cursor: pointer;
+    position: relative;
+}
+
+.hidden-content {
+    display: block;
+    max-width: 0;
+    max-height: 0;
+    overflow-y: scroll;
+}
+
+.hidden-content::-webkit-scrollbar {
+    display: none;
+}
+.hidden-content {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.bird-item input:checked~.hidden-content {
+    max-width: 600px;
+    max-height: 400px;
+}
+
+.bird-item, .hidden-content {
+    transition: all 0.5s;
+}
+
+#main-viz input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+
+.bird-item a {
+    text-decoration: none;
+    font-weight: 100;
+    color: #f7f7f7;
+    background: rgba(255, 255, 255, 0.2);
+    display: block;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 3px 0;
+}
+
+.count {
+    position: absolute;
+    font-weight: 600;
+    height: 15px;
+    top: -10px;
+    right: 5px;
+    color: #678;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+}
+
+
+
+/* The animation code */
+@keyframes buffer {
+  0% {
+      background-color: #fff;
+      left:0;
+  }
+    50% {
+        background-color: rgba(50,70,100,1);
+        left:50%;
+    }
+  100% {
+      background-color: #fff;
+      left: calc(100% - 20px);
+    }
+}
+
+#buffering-circle {
+    position:absolute;
+    width: 20px;
+    height: 20px;
+    background-color: rgba(50,70,100,1);
+    border-radius: 20px;
+    animation: buffer 4s infinite;
+    left:0px;
+    top:50%;
+}

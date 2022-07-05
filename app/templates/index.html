@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,400&display=swap"
+        rel="stylesheet">
+    <title>Twitter Sightings</title>
+    <link rel="stylesheet" href={{ url_for( 'static' ,filename='styles/style.css' ) }}>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+
+<body>
+
+    <script>
+
+        let sightingsData = [];
+        const TODAY = new Date();
+        let ONE_WEEK_AGO = new Date();
+        ONE_WEEK_AGO.setDate(ONE_WEEK_AGO.getDate() - 7);
+
+        function getData() {
+            let bufferDiv = document.getElementById('buffering-circle');
+            bufferDiv.style.visibility = 'visible';
+            document.getElementById('main-viz').innerHTML = '';
+            let body = {
+                'keyword': document.getElementById('search-term').value,
+                'start_date': document.getElementById('start-date').value,
+                'end_date': document.getElementById('end-date').value,
+                'max_tweets': 1500
+            }
+
+            fetch(`${window.origin}/run-script`, {
+                method: "POST",
+                credentials: "include",
+                body: JSON.stringify(body),
+                cache: "no-cache",
+                headers: new Headers({
+                    "content-type": "application/json"
+                })
+            })
+                .then(function (response) {
+                    if (response.status !== 200) {
+                        console.log(`Looks like there was a problem. Status code: ${response.status}`);
+                        bufferDiv.style.visibility = 'hidden';
+                        return;
+                    }
+                    response.json().then(function (data) {
+                        let sightings = data['sightings'];
+                        sightingsData = sightings;
+                        bufferDiv.style.visibility = 'hidden';
+                        plotData(sightings);
+
+                    });
+                })
+                .catch(function (error) {
+                    console.log("Fetch error: " + error);
+                    bufferDiv.style.visibility = 'hidden';
+                });
+        }
+
+        function plotData(sightingsData) {
+            let tweetsBySpecies = sightingsData.map(
+                sighting => sighting.birds.map(
+                    function (species) { return { 'species': species, 'tweet': sighting.content, 'id': sighting.id } }
+                )
+            ).flat();
+            let groupedData = d3.group(tweetsBySpecies, function (d) { return (d.species) });
+            groupedData = Array.from(groupedData).sort((a,b) => b[1].length - a[1].length);
+
+            d3.select('#main-viz')
+                .selectAll("div")
+                .data(groupedData)
+                .enter()
+                .append("label")
+                .attr("class", "bird-item")
+                .style("background", "#479")
+                .html(
+                    d => `<div class="count">${d[1].length}</div>
+                        <input type="checkbox">
+                        <b>${d[0]}</b>
+                        <div class="hidden-content">
+                            ${d[1].map(twt => '<a class="tweet-content" target="_blank" href="https://twitter.com/anyuser/status/' + twt.id + '">' + twt.tweet + '</a>').join('')}
+                        </div>`
+                )
+                .attr("width", d => `${d[1].length}px`)
+        }
+    </script>
+
+    <div id="top-container">
+        <h1>Twitter Sightings Scraper</h1>
+        <input type="text" id="search-term" name="search-term" placeholder="search">
+        <label for="start-date">From</label>
+        <input type="date" id="start-date" name="start-date">
+        <label for="end-date">To</label>
+        <input type="date" id="end-date" name="end-date">
+        <button onclick="getData();">Go</button>
+    </div>
+    <div id="main-container">
+        <div id="buffering-circle" style="visibility: hidden;"></div>
+        <div id="main-viz"></div>
+    </div>
+
+    <script>
+        document.getElementById('start-date').value = d3.timeFormat('%Y-%m-%d')(ONE_WEEK_AGO);
+        document.getElementById('end-date').value = d3.timeFormat('%Y-%m-%d')(TODAY);
+    </script>
+</body>
+
+</html>
