@@ -1,8 +1,9 @@
 import snscrape.modules.twitter as sntwitter
 import re
 import json
+from pathlib import Path
 
-with open(r'app\bird_names.json', 'r') as f:
+with open(Path('app','bird_names.json', 'r') as f:
     unformatted_bird_names = json.load(f)
 
 BIRD_NAMES = {re.sub('[^\w ]', '', k).lower(): v for k,v in unformatted_bird_names.items()}
