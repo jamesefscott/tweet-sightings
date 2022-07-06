@@ -24,6 +24,14 @@
         let ONE_WEEK_AGO = new Date();
         ONE_WEEK_AGO.setDate(ONE_WEEK_AGO.getDate() - 7);
 
+        let labelCols = {
+            'Plants': '#357B3E',
+            'Lepidoptera': '#724485',
+            'Other Animals': '#837744',
+            'Birds': '#39678A',
+            'Fungi': '#9A3434'
+        };
+
         function getData() {
             let bufferDiv = document.getElementById('buffering-circle');
             bufferDiv.style.visibility = 'visible';
@@ -32,7 +40,7 @@
                 'keyword': document.getElementById('search-term').value,
                 'start_date': document.getElementById('start-date').value,
                 'end_date': document.getElementById('end-date').value,
-                'max_tweets': 1500
+                'max_tweets': 10000
             }
 
             fetch(`${window.origin}/run-script`, {
@@ -66,20 +74,20 @@
 
         function plotData(sightingsData) {
             let tweetsBySpecies = sightingsData.map(
-                sighting => sighting.birds.map(
-                    function (species) { return { 'species': species, 'tweet': sighting.content, 'id': sighting.id } }
+                sighting => sighting.species.map(
+                    function (species, idx) { return { 'species': species, 'label': sighting.labels[idx], 'tweet': sighting.content, 'id': sighting.id } }
                 )
             ).flat();
             let groupedData = d3.group(tweetsBySpecies, function (d) { return (d.species) });
             groupedData = Array.from(groupedData).sort((a,b) => b[1].length - a[1].length);
-
+            console.log(groupedData);
             d3.select('#main-viz')
                 .selectAll("div")
                 .data(groupedData)
                 .enter()
                 .append("label")
                 .attr("class", "bird-item")
-                .style("background", "#479")
+                .style("background", d => labelCols[d[1][0].label])
                 .html(
                     d => `<div class="count">${d[1].length}</div>
                         <input type="checkbox">
