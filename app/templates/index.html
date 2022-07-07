@@ -91,7 +91,7 @@
                 .html(
                     d => `<div class="count">${d[1].length}</div>
                         <input type="checkbox">
-                        <b>${d[0]}</b>
+                        ${d[0]}
                         <div class="hidden-content">
                             ${d[1].map(twt => '<a class="tweet-content" target="_blank" href="https://twitter.com/anyuser/status/' + twt.id + '">' + twt.tweet + '</a>').join('')}
                         </div>`
