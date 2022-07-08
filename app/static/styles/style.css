@@ -97,7 +97,7 @@ h1 {
 
 .bird-item input:checked~.hidden-content {
     margin-top: 5px;
-    max-width: 100%;
+    max-width: 500px;
     max-height: 400px;
 }
 
