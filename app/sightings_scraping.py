@@ -2,12 +2,13 @@ import snscrape.modules.twitter as sntwitter
 import re
 import json
 from pathlib import Path
+import time
 
 # with open(Path('app','bird_names.json'), 'r') as f:
 #     unformatted_bird_names = json.load(f)
 # with open(Path('app','butterfly_names.json'), 'r') as f:
 #     unformatted_butterfly_names = json.load(f)
-with open(Path('app','all_species_data.json'), 'r') as f:
+with open(Path('app', 'all_species_data.json'), 'r') as f:
     all_species_data = json.load(f)
 
 # BIRD_NAMES = {re.sub('[^\w ]', '', k).lower(): v for k,v in unformatted_bird_names.items()}
@@ -20,11 +21,11 @@ GROUP_CONDITIONS = {
     'Lepidoptera': {'tx_level': 'Order',
                     'tx_list': ['Lepidoptera']},
     'Other Animals': {'tx_level': 'Kingdom',
-            'tx_list': ['Animalia']},
+                      'tx_list': ['Animalia']},
     'Plants': {'tx_level': 'Kingdom',
-            'tx_list': ['Plantae']},
+               'tx_list': ['Plantae']},
     'Fungi': {'tx_level': 'Kingdom',
-            'tx_list': ['Fungi']}
+              'tx_list': ['Fungi']}
 }
 
 
@@ -38,7 +39,7 @@ def check_group_conditions(common_name):
 def get_sightings(
     req
 ):
-
+    start_time = time.time()
     keyword = req['keyword']
     maxTweets = req['max_tweets']
     start_date_str = req['start_date']
@@ -58,9 +59,9 @@ def get_sightings(
             break
         rec = {
             'id': str(tweet.id),
-            'date': tweet.date,
+            'date': tweet.date.strftime('%Y-%m-%d'),
             'content': tweet.content,
-            'content_clean': re.sub('\s+',' ',re.sub('[^\w\s@#]','', tweet.content)).lower()
+            'content_clean': re.sub('\s+', ' ', re.sub('[^\w\s@#]', '', tweet.content)).lower()
         }
         rec['species'] = re.findall(search_str, rec['content_clean'])
         rec['species'] = [ALL_SPECIES[name] for name in rec['species']]
@@ -69,4 +70,18 @@ def get_sightings(
         if rec['species']:
             recs.append(rec)
 
-    return recs
+        if time.time() - start_time > 28.5:
+            print(time)
+            return {
+                'summary': {
+                    'status': 'incomplete',
+                    'minDate': recs[-1]['date'],
+                    'maxDate': recs[0]['date']
+                },
+                'records': recs
+            }
+
+    return {
+        'summary': {'status': 'complete'},
+        'records': recs
+    }

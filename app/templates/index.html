@@ -19,7 +19,8 @@
 
     <script>
 
-        let sightingsData = [];
+        let sightingsData = [],
+            responseSummary = {};
         const TODAY = new Date();
         let ONE_WEEK_AGO = new Date();
         ONE_WEEK_AGO.setDate(ONE_WEEK_AGO.getDate() - 7);
@@ -33,8 +34,10 @@
         };
 
         function getData() {
-            let bufferDiv = document.getElementById('buffering-circle');
-            bufferDiv.style.visibility = 'visible';
+            document.getElementById('status-message').innerText = '';
+            let bufferDivs = Array.from(document.getElementsByClassName('buffering-circle'));
+            bufferDivs.forEach(bd => bd.style.visibility = 'visible');
+
             document.getElementById('main-viz').innerHTML = '';
             let body = {
                 'keyword': document.getElementById('search-term').value,
@@ -54,33 +57,39 @@
             })
                 .then(function (response) {
                     if (response.status !== 200) {
-                        console.log(`Looks like there was a problem. Status code: ${response.status}`);
-                        bufferDiv.style.visibility = 'hidden';
+                        document.getElementById('status-message').innerText = (
+                            `Looks like there was a problem. Status code: ${response.status}`
+                        );
+                        bufferDivs.forEach(bd => bd.style.visibility = 'hidden');
                         return;
                     }
                     response.json().then(function (data) {
                         let sightings = data['sightings'];
-                        sightingsData = sightings;
-                        bufferDiv.style.visibility = 'hidden';
-                        plotData(sightings);
+
+                        // make globally accessible, because why not.
+                        sightingsData = sightings.records;
+                        responseSummary = sightings.summary;
+
+                        bufferDivs.forEach(bd => bd.style.visibility = 'hidden');
+                        plotData(sightingsData, responseSummary);
 
                     });
                 })
                 .catch(function (error) {
-                    console.log("Fetch error: " + error);
-                    bufferDiv.style.visibility = 'hidden';
+                    document.getElementById('status-message').innerText = "Fetch error: " + error;
+                    bufferDivs.forEach(bd => bd.style.visibility = 'hidden');
                 });
         }
 
-        function plotData(sightingsData) {
+        function plotData(sightingsData, responseSummary) {
             let tweetsBySpecies = sightingsData.map(
                 sighting => sighting.species.map(
                     function (species, idx) { return { 'species': species, 'label': sighting.labels[idx], 'tweet': sighting.content, 'id': sighting.id } }
                 )
             ).flat();
             let groupedData = d3.group(tweetsBySpecies, function (d) { return (d.species) });
-            groupedData = Array.from(groupedData).sort((a,b) => b[1].length - a[1].length);
-            console.log(groupedData);
+            groupedData = Array.from(groupedData).sort((a, b) => b[1].length - a[1].length);
+
             d3.select('#main-viz')
                 .selectAll("div")
                 .data(groupedData)
@@ -97,6 +106,12 @@
                         </div>`
                 )
                 .attr("width", d => `${d[1].length}px`)
+
+            document.getElementById('status-message').innerText = (
+                responseSummary.status == 'incomplete'
+                    ? `Too many results. Only showing ${responseSummary.minDate} - ${responseSummary.maxDate}`
+                    : ''
+            )
         }
     </script>
 
@@ -107,14 +122,28 @@
         <input type="date" id="start-date" name="start-date">
         <label for="end-date">To</label>
         <input type="date" id="end-date" name="end-date">
-        <button onclick="getData();">Go</button>
+        <button id="search-go" onclick="getData();">Go</button>
     </div>
     <div id="main-container">
-        <div id="buffering-circle" style="visibility: hidden;"></div>
+        <div class="buffering-circle" id="bc1" style="visibility: hidden;"></div>
+        <div class="buffering-circle" id="bc2" style="visibility: hidden;"></div>
+        <div class="buffering-circle" id="bc3" style="visibility: hidden;"></div>
+        <div id="status-message"></div>
         <div id="main-viz"></div>
     </div>
 
     <script>
+        ['search-term', 'start-date', 'end-date'].forEach((id) => {
+            // click button if hit enter from textbox
+            document.getElementById("search-term")
+                .addEventListener("keyup", function (event) {
+                    event.preventDefault();
+                    if (event.keyCode === 13) {
+                        document.getElementById("search-go").click();
+                    }
+                });
+        })
+
         document.getElementById('start-date').value = d3.timeFormat('%Y-%m-%d')(ONE_WEEK_AGO);
         document.getElementById('end-date').value = d3.timeFormat('%Y-%m-%d')(TODAY);
     </script>
