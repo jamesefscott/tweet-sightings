@@ -1,5 +1,5 @@
 body {
-    font-family: "Source Sans Pro", "Arial", sans-serif;
+    font-family: "neris", "Arial", sans-serif;
     position: absolute;
     background: rgb(40, 45, 50);
     color: rgb(200, 200, 200);
@@ -117,6 +117,7 @@ h1 {
 .bird-item a {
     text-decoration: none;
     font-weight: 100;
+    font-size: 0.9em;
     color: #fff;
     background: rgba(255, 255, 255, 0.1);
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
@@ -154,18 +155,24 @@ h1 {
         background-color: inherit;
         left: 0;
         top: 50%;
+        transform: rotate(0deg);
+        border-radius: 25px;
     }
 
     50% {
-        background-color: rgba(108, 116, 130, 1);
-        left: calc(50% - 10px);
+        background-color: rgb(90, 95, 105);
+        left: calc(50% - 13px);
         top: 20%;
+        transform: rotate(-720deg);
+        border-radius: 7px;
     }
 
     100% {
         background-color: inherit;
-        left: calc(100% - 20px);
+        left: calc(100% - 25px);
         top: 50%;
+        transform: rotate(-1440deg);
+        border-radius: 25px;
     }
 }
 
@@ -174,18 +181,24 @@ h1 {
         background-color: inherit;
         left: 0;
         top: 50%;
+        transform: rotate(0deg);
+        border-radius: 25px;
     }
 
     50% {
-        background-color: rgba(108, 116, 130, 1);
-        left: calc(75% - 10px);
+        background-color: rgb(90, 95, 105);
+        left: calc(75% - 13px);
         top: 25%;
+        transform: rotate(-360deg);
+        border-radius: 7px;
     }
 
     100% {
         background-color: inherit;
-        left: calc(100% - 20px);
+        left: calc(100% - 25px);
         top: 50%;
+        transform: rotate(-720deg);
+        border-radius: 25px;
     }
 }
 
@@ -194,28 +207,33 @@ h1 {
         background-color: inherit;
         left: 0;
         top: 50%;
+        transform: rotate(0deg);
+        border-radius: 25px;
     }
 
     50% {
-        background-color: rgba(108, 116, 130, 1);
-        left: calc(25% - 10px);
+        background-color: rgb(90, 95, 105);
+        left: calc(25% - 13px);
         top: 25%;
+        transform: rotate(-360deg);
+        border-radius: 7px;
     }
 
     100% {
         background-color: inherit;
-        left: calc(100% - 20px);
+        left: calc(100% - 25px);
         top: 50%;
+        transform: rotate(-720deg);
+        border-radius: 25px;
     }
 }
 
 .buffering-circle {
     position: absolute;
-    width: 20px;
-    height: 20px;
-    background-color: rgba(50, 70, 100, 1);
-    border-radius: 20px;
-    animation: buffer 4s infinite;
+    width: 25px;
+    height: 25px;
+    background-color: rgb(90, 95, 105);
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 30%);
     left: 0px;
     top: 50%;
     animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1);
