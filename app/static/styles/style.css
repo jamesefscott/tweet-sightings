@@ -163,15 +163,16 @@ h1 {
         opacity: 1;
         left: calc(50% - 13px);
         top: 20%;
-        transform: rotate(-720deg);
+        transform: rotate(-180deg);
         border-radius: 7px;
+        width: 70px
     }
 
     100% {
         opacity: 0;
         left: calc(100% - 25px);
         top: 50%;
-        transform: rotate(-1440deg);
+        transform: rotate(-360deg);
         border-radius: 25px;
     }
 }
@@ -189,15 +190,16 @@ h1 {
         opacity: 1;
         left: calc(75% - 13px);
         top: 25%;
-        transform: rotate(-360deg);
+        transform: rotate(-180deg);
         border-radius: 7px;
+        width: 70px
     }
 
     100% {
         opacity: 0;
         left: calc(100% - 25px);
         top: 50%;
-        transform: rotate(-720deg);
+        transform: rotate(-360deg);
         border-radius: 25px;
     }
 }
@@ -215,15 +217,16 @@ h1 {
         opacity: 1;
         left: calc(25% - 13px);
         top: 25%;
-        transform: rotate(-360deg);
+        transform: rotate(-180deg);
         border-radius: 7px;
+        width: 70px
     }
 
     100% {
         opacity: 0;
         left: calc(100% - 25px);
         top: 50%;
-        transform: rotate(-720deg);
+        transform: rotate(-360deg);
         border-radius: 25px;
     }
 }
@@ -232,8 +235,6 @@ h1 {
     position: absolute;
     width: 25px;
     height: 25px;
-    background-color: rgb(90, 95, 105);
-    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 30%);
     left: 0px;
     top: 50%;
     animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1);
@@ -241,14 +242,17 @@ h1 {
 
 #bc1 {
     animation: buffer1 4s infinite;
+    background-color: rgb(60, 83, 132);
 }
 
 #bc2 {
     animation: buffer2 3s infinite;
+    background-color: rgb(40, 100, 78);
 }
 
 #bc3 {
     animation: buffer3 5s infinite;
+    background-color: rgb(114, 90, 153);
 }
 
 #status-message {
