@@ -7,8 +7,6 @@ import time
 with open(Path('app', 'all_species_data.json'), 'r') as f:
     all_species_data = json.load(f)
 
-# BIRD_NAMES = {re.sub('[^\w ]', '', k).lower(): v for k,v in unformatted_bird_names.items()}
-# BUTTERFLY_NAMES = {re.sub('[^\w ]', '', k).lower(): v for k,v in unformatted_butterfly_names.items()}
 ALL_SPECIES = {re.sub('[^\w ]', '', sp).lower(): sp for sp in all_species_data.keys()}
 
 GROUP_CONDITIONS = {
