@@ -4,10 +4,6 @@ import json
 from pathlib import Path
 import time
 
-# with open(Path('app','bird_names.json'), 'r') as f:
-#     unformatted_bird_names = json.load(f)
-# with open(Path('app','butterfly_names.json'), 'r') as f:
-#     unformatted_butterfly_names = json.load(f)
 with open(Path('app', 'all_species_data.json'), 'r') as f:
     all_species_data = json.load(f)
 
